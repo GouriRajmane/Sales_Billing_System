@@ -1,50 +1,40 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Sales_Billing_System.Models
 {
     public class Product_Master
     {
-        //- Product ID
-        //- Product Name
-        //- SKU(optional)
-        //- Unit
-        //- Selling Price
-        //- GST %   (optional)
-        //- Is Active
-
         [Key]
         public int ProductId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Product Name is required.")]
         [StringLength(100)]
         public string ProductName { get; set; }
 
         [StringLength(50)]
         public string? SKU { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Unit is required.")]
         [StringLength(20)]
         public string Unit { get; set; }
 
-
-        [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Selling Price must be a positive value.")]
+        [Required(ErrorMessage = "Selling Price is required.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Selling Price must be greater than zero.")]
         public decimal SellingPrice { get; set; }
 
-        [Required]
         [Range(0, 100, ErrorMessage = "GST % must be between 0 and 100.")]
-        public decimal GSTPercentage { get; set; }
+        public decimal? GSTPercentage { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [Required]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
-        
-
+        // Navigation Property
+        public virtual ICollection<Sales_Invoice_Item> SalesInvoiceItems { get; set; }
+            = new List<Sales_Invoice_Item>();
     }
 }
